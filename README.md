@@ -1,4 +1,4 @@
-# Ireland Trip 2026 — photo & video gallery
+# Potato Land Trip 2026 — photo & video gallery
 
 A React + Material UI gallery built from `photo-git-template`. Camera
 originals are backed up with Git LFS, web-sized copies are deployed to
@@ -44,8 +44,9 @@ files, so it cannot regenerate the web copies.
 ## Publishing to GitHub (first time)
 
 ```bash
-gh repo create ireland-trip-2026 --public --source . --push
-# or: git remote add origin https://github.com/<you>/ireland-trip-2026.git && git push -u origin main
+# Uses the PhotoFreak47 SSH key; HTTPS would sign in as the other GitHub account.
+git remote add origin git@github.com:PhotoFreak47/potato-land-trip-2026.git
+git push -u origin main
 ```
 
 Then **Settings → Pages → Source: GitHub Actions**. The first push uploads
