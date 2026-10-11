@@ -1,0 +1,20 @@
+# Everything under originals/ (camera JPG + RAW + video, as shot) goes through
+# Git LFS. Path-based so it is case-insensitive to extensions (.JPG/.jpg/.MP4)
+# and so the camera videos (100MB+) can never hit GitHub's 100MB plain-git limit.
+originals/** filter=lfs diff=lfs merge=lfs -text
+
+# Safety net: RAW / camera video anywhere else in the repo also goes to LFS.
+*.ARW filter=lfs diff=lfs merge=lfs -text
+*.arw filter=lfs diff=lfs merge=lfs -text
+*.CR2 filter=lfs diff=lfs merge=lfs -text
+*.CR3 filter=lfs diff=lfs merge=lfs -text
+*.NEF filter=lfs diff=lfs merge=lfs -text
+*.DNG filter=lfs diff=lfs merge=lfs -text
+*.RAF filter=lfs diff=lfs merge=lfs -text
+*.ORF filter=lfs diff=lfs merge=lfs -text
+*.MOV filter=lfs diff=lfs merge=lfs -text
+*.MTS filter=lfs diff=lfs merge=lfs -text
+
+# public/media/ (generated web copies) stays plain git ON PURPOSE: the Pages
+# build checks out with lfs:false, so anything served must be a real blob.
+# Do NOT add *.jpg or *.mp4 LFS rules here - they would break the gallery.

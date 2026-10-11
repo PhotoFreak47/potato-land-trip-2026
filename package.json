@@ -1,0 +1,27 @@
+{
+  "name": "ireland-trip-2026",
+  "displayName": "Ireland Trip 2026",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "manifest": "node scripts/generate-manifest.js"
+  },
+  "dependencies": {
+    "@mui/icons-material": "^5.16.7",
+    "@mui/material": "^5.16.7",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "sharp": "^0.33.5",
+    "vite": "^5.4.6",
+    "ffmpeg-static": "^5.2.0"
+  }
+}

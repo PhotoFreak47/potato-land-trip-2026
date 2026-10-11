@@ -1,0 +1,65 @@
+name: Build and deploy gallery
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # originals/ (camera JPG + RAW + video) is Git LFS and is never served
+          # by Pages, so it is not downloaded here. This keeps CI from spending
+          # the account's LFS bandwidth quota on every deploy.
+          lfs: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # Web copies are generated locally (CI can't see the LFS originals) and
+      # committed. Fail loudly if someone forgot to run/commit them.
+      - name: Check generated media is committed
+        run: |
+          test -f public/manifest.json || { echo "::error::public/manifest.json missing - run 'npm run manifest' locally and commit public/"; exit 1; }
+          if grep -rl --include='*.jpg' --include='*.mp4' '^version https://git-lfs' public/ ; then
+            echo "::error::LFS pointer files found in public/ - web copies must be plain git"; exit 1
+          fi
+
+      - run: npm ci
+
+      # Base path = repo name so assets resolve at https://<user>.github.io/<repo>/
+      - name: Build
+        run: npm run build
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+          # "Original from camera" download links point at the LFS file. Only
+          # works for public repos; leave empty (delete this line) for private.
+          VITE_ORIGINALS_BASE: ${{ github.event.repository.private && '' || format('https://media.githubusercontent.com/media/{0}/{1}/', github.repository, github.ref_name) }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
