@@ -2,7 +2,8 @@
 
 A React + Material UI gallery built from `photo-git-template`. Camera
 originals are backed up with Git LFS, web-sized copies are deployed to
-GitHub Pages, and viewers can browse by day, play videos, download, or share.
+GitHub Pages, and viewers can browse by day, play videos, share, or download
+one, several, or all items as SQ (web size) or HD (camera original).
 
 See [BUSINESS_LOGIC.md](BUSINESS_LOGIC.md) for the rules and the reasons behind them.
 
@@ -56,8 +57,8 @@ the LFS originals, which takes a while because they are several GB.
 
 - **Git LFS quota is per account** and all repos share it. This repo's
   originals are several GB, so check Settings → Billing → Git LFS before
-  pushing. "Original from camera" downloads by viewers also use LFS bandwidth.
-- Private repo: Pages for private repos needs a paid plan, and "Original"
-  links are hidden because `media.githubusercontent.com` needs auth.
+  pushing. HD downloads by viewers also use LFS bandwidth.
+- Private repo: Pages for private repos needs a paid plan, and the HD option
+  is hidden because `media.githubusercontent.com` needs auth.
 - Plain-git files over 100MB are rejected by GitHub. Web copies stay far
   below that, and the script warns above 50MB.

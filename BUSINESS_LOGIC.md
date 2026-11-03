@@ -67,11 +67,26 @@ Tuning levers are the constants at the top of the script (`THUMB_WIDTH`,
 
 ## 4. Download vs. share logic (changed)
 
-- **Download** opens a menu:
-  1. *Web size* (2560px JPEG, or 1080p MP4) is served from Pages and always available.
-  2. *Original from camera* is the untouched LFS file, linked through
+- **(changed)** Every download comes in two qualities, named the same everywhere:
+  1. **SQ · Standard quality**: the web copy (2560px JPEG, or 1080p MP4),
+     served from Pages. Always available.
+  2. **HD · Full resolution**: the untouched camera file in LFS, fetched from
      `media.githubusercontent.com`. It only appears for public repos, and
-     **every click uses the account's LFS bandwidth quota**.
+     **every HD download uses the account's LFS bandwidth quota**. "Download
+     all" in HD is several GB.
+- **One item**: the tile's download button opens an SQ / HD menu.
+- **(new) Several items**: select tiles (checkbox on hover, long-press on
+  touch, or the **Select** button; shift-click selects a range; **Select day**
+  per day header), then **Download** → choose SQ or HD → one ZIP, with a
+  folder per day if the items span several days. **Download all** does the
+  same for everything currently shown, so it follows the filter and search.
+  The last SQ/HD choice is remembered per browser.
+- **(new) ZIPs are built in the browser** with `client-zip` (no server), and
+  files are stored rather than compressed, since JPEG/MP4 don't shrink. Up to
+  500MB is built in memory. A bigger ZIP streams straight to disk in
+  Chrome/Edge desktop (a save dialog appears) and is split into 500MB parts
+  in other browsers, so phones don't run out of memory. Tuning:
+  `PART_LIMIT_KB` in `src/download.js`.
 - **Share**: native share sheet if available, else WhatsApp / X / Facebook /
   copy link. Shared URLs point at the web copy on Pages, not at LFS, so
   social previews never use LFS bandwidth.
@@ -86,7 +101,7 @@ Tuning levers are the constants at the top of the script (`THUMB_WIDTH`,
 | Pages site size | 1GB | ~135MB per trip (web copies only) |
 | Pages bandwidth | ~100GB/month soft | Visitors load 800px thumbs first; large copies only when opened |
 | LFS storage | Free quota is per account, shared by all repos | **All originals count**: a trip of RAW+JPEG+4K video is several GB |
-| LFS bandwidth | Per account, monthly | Used only by `git lfs pull`/clone and "Original" downloads, never by CI or normal viewing |
+| LFS bandwidth | Per account, monthly | Used only by `git lfs pull`/clone and HD downloads, never by CI or normal viewing |
 
 LFS storage is the one real cost. If the account goes over its free LFS
 quota, either pay for more, or keep RAW/video originals backed up outside
